@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sona Dheep Raja Balaji - Interaction Designer &amp; UX Researcher</title>
+<meta name="description" content="Interaction designer and UX researcher in Sydney. Master of Interaction Design at UTS, former senior software engineer in test at Freshworks.">
+
+<meta property="og:title" content="Sona Dheep Raja Balaji — Interaction Designer &amp; UX Researcher">
+<meta property="og:description" content="I came to design from the other side of the build.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<a class="skip" href="#work">Skip to work</a>
+
+<!-- ══════════ nav ══════════ -->
+<nav class="nav" id="nav">
+  <a class="nav-name" href="#top">Sona Dheep Raja Balaji</a>
+
+  <div class="nav-links" id="navLinks">
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#contact">Contact</a>
+    <a class="nav-cta" href="mailto:sonadheep@gmail.com">Get in touch</a>
+  </div>
+
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <line x1="3" y1="6"  x2="19" y2="6"></line>
+      <line x1="3" y1="11" x2="19" y2="11"></line>
+      <line x1="3" y1="16" x2="19" y2="16"></line>
+    </svg>
+  </button>
+</nav>
+
+<!-- ══════════ hero ══════════ -->
+<header class="hero" id="top">
+  <div class="shell">
+    <p class="label label-rose reveal"><span class="dash"></span>Interaction Designer &amp; UX Researcher · Sydney</p>
+
+    <h1 class="reveal d1">
+      I came to design<br>
+      from the <em>other side</em><br>
+      of the build.
+    </h1>
+
+    <p class="hero-sub reveal d2">
+      Five years as a senior software engineer in test taught me to distrust
+      assumptions, including my own. Now I research at the front of the process, not the back.
+    </p>
+
+    <div class="hero-cta reveal d3">
+      <a class="btn btn-solid" href="#work">
+        See the work
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+          <path d="M2.5 7.5h10M9 4l3.5 3.5L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
+      <a class="btn btn-ghost" href="cv/CV_Portfolio.pdf"
+         download="CV_Portfolio.pdf">Download CV</a>
+    </div>
+
+    <div class="stats reveal d4">
+      <div class="stat"><b>5 yrs</b><span>Engineering in test</span></div>
+      <div class="stat"><b>MID</b><span>UTS Sydney, in progress</span></div>
+      <div class="stat"><b>6</b><span>Projects, research to build</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ about ══════════ -->
+<section class="about" id="about">
+  <span class="blob blob-sage" aria-hidden="true"></span>
+  <span class="blob blob-rose" aria-hidden="true"></span>
+
+  <div class="shell">
+    <p class="label label-sage"><span class="dash"></span>Background</p>
+
+    <div class="timeline-wrap">
+      <ol class="timeline" id="timeline"></ol>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ work ══════════ -->
+<section class="work" id="work">
+  <div class="shell">
+    <p class="label label-rose"><span class="dash"></span>Selected work</p>
+    <h2 class="work-h">Six projects, and the strongest decision in each one was a removal.</h2>
+    <p class="wall-hint">Pick one off the wall</p>
+    <div class="wall" id="wall"></div>
+  </div>
+</section>
+
+<!-- opened project -->
+<div class="scrim" id="scrim" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<!-- ══════════ process ══════════ -->
+<section class="process" id="process">
+  <div class="shell">
+    <p class="label label-forest"><span class="dash"></span>Process &amp; people</p>
+    <h2 class="process-h">How I work, and what it's like to work with me.</h2>
+
+    <!--
+      ⚠ PLACEHOLDER QUOTES — replace all three before publishing.
+      Ask each person for two sentences: one on how you work, one on what
+      changed because of your work. Do not publish with brackets in place.
+    -->
+    <div class="quotes" id="quotes"></div>
+
+    <p class="label label-forest mt"><span class="dash"></span>Methods &amp; tools</p>
+    <div class="methods" id="methods"></div>
+  </div>
+</section>
+
+<!-- ══════════ contact ══════════ -->
+<section class="contact" id="contact">
+  <div class="shell narrow">
+    <p class="label label-rose center"><span class="dash"></span>Get in touch</p>
+    <h2 class="contact-h">Let's talk more!</h2>
+    <p class="contact-p">I'm in Sydney and open to UX design, interaction design and product design roles. Email is the fastest way to reach me.</p>
+
+    <div class="contact-cta">
+      <a class="btn btn-solid" href="mailto:sonadheep@gmail.com">sonadheep@gmail.com</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/sona-dheep-raja-balaji-335263168" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn btn-ghost" href="https://github.com/sonadheeprajabalaji-lang" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-ghost" href="cv/CV_Portfolio.pdf"
+         download="CV_Portfolio.pdf">Download CV</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="shell foot-in">
+    <span>© <span id="year"></span> Sona Dheep Raja Balaji · Sydney</span>
+    <span class="foot-links">
+      <a href="https://www.linkedin.com/in/sona-dheep-raja-balaji-335263168" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/sonadheeprajabalaji-lang" target="_blank" rel="noopener">GitHub</a>
+    </span>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
