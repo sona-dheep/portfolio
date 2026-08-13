@@ -122,7 +122,14 @@
 
     tile.addEventListener("mouseenter", start);
     tile.addEventListener("mouseleave", stop);
-    tile.addEventListener("focus", start);
+    /* Only start on *keyboard* focus. Closing the sheet returns focus to the
+       tile programmatically, and a plain "focus" listener would restart the
+       slideshow with the pointer nowhere near it. :focus-visible is false for
+       programmatic and mouse focus, true when tabbing. */
+    tile.addEventListener("focus", function () {
+      try { if (tile.matches(":focus-visible")) start(); }
+      catch (e) { /* very old browser: skip focus-driven playback */ }
+    });
     tile.addEventListener("blur", stop);
   });
 
@@ -134,14 +141,36 @@
   function openSheet(i) {
     var p = PROJECTS[i];
 
-    var tabButtons = p.tabs.map(function (t, n) {
+    var tabs = p.tabs.slice();
+
+    /* a project with `team` gets a credits tab */
+    if (p.team && p.team.people && p.team.people.length) {
+      tabs.push({
+        label: p.team.label || "Team",
+        html:
+          (p.team.note ? '<p class="team-note">' + p.team.note + '</p>' : "") +
+          '<ul class="people">' +
+            p.team.people.map(function (m) {
+              var initials = m.name.split(/\s+/).slice(0, 2)
+                              .map(function (w) { return w[0]; }).join("").toUpperCase();
+              return '<li' + (m.me ? ' class="me"' : '') + '>' +
+                       '<span class="init" aria-hidden="true">' + initials + '</span>' +
+                       '<span class="who"><b>' + m.name + '</b><span>' + (m.role || "") + '</span></span>' +
+                     '</li>';
+            }).join("") +
+          '</ul>'
+      });
+    }
+
+
+    var tabButtons = tabs.map(function (t, n) {
       return '<button role="tab" id="tab-' + n + '" aria-controls="panel-' + n + '"' +
              ' aria-selected="' + (n === 0) + '" data-tab="' + n + '">' + t.label + '</button>';
     }).join("");
 
-    var panels = p.tabs.map(function (t, n) {
-      return '<div class="panel" role="tabpanel" id="panel-' + n + '" aria-labelledby="tab-' + n + '"' +
-             (n === 0 ? "" : " hidden") + '>' + t.html + '</div>';
+    var panels = tabs.map(function (t, n) {
+      return '<div class="panel" role="tabpanel" id="panel-' + n + '"' +
+             ' aria-labelledby="tab-' + n + '"' + (n === 0 ? "" : " hidden") + '>' + t.html + '</div>';
     }).join("");
 
     /* links moved up under the title — first one gets the solid treatment */
@@ -214,6 +243,10 @@
     }
 
     lastFocus = document.activeElement;
+    /* halt any tile slideshow still cycling behind the scrim */
+    document.querySelectorAll(".tile").forEach(function (t) {
+      t.dispatchEvent(new Event("mouseleave"));
+    });
     scrim.hidden = false;
     scrim.classList.add("open");
     document.body.style.overflow = "hidden";
