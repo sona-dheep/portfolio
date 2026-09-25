@@ -102,17 +102,14 @@ const PROJECTS = [
     pills: ["Product design", "User research", "AI-assisted build", "SwiftUI"],
     img: "assets/snippets-cover.jpg",
     images: ["assets/snippets-cover.jpg", "assets/snippets-2.jpg", "assets/snippets-3.jpg", "assets/snippets-4.jpg", "assets/snippets-5.jpg"],
-    /* ⚠ ADD NAMES BEFORE PUBLISHING, or delete this whole `team` block.
-       Ask each person first. Names and roles only — no student numbers. */
     team: {
-      note: "Snippets was a team of six in iOS Innovation Studio. We shared the research and the group prototype; each of us then designed and built our own value variation.",
+      note: "Snippets was a team of six in iOS Innovation Studio. We shared the research and the first prototype; each of us then designed and built our own value variation.",
       people: [
-        { name: "Sona Dheep Raja Balaji", role: "Mindfulness variation, design and build", me: true },
-        { name: "[Teammate name]", role: "[Their variation]" },
-        { name: "[Teammate name]", role: "[Their variation]" },
-        { name: "[Teammate name]", role: "[Their variation]" },
-        { name: "[Teammate name]", role: "[Their variation]" },
-        { name: "[Teammate name]", role: "[Their variation]" }
+        { name: "Sona Dheep Raja Balaji", role: "Mindfulness as value variation", me: true },
+        { name: "Monica Barrera Acero", role: "Habit Forming as value variation" },
+        { name: "Juanita Suarez ", role: "Nostalgia as value variation" },
+        { name: "Nirmita Sharat", role: "Creativity as value variation" },
+        { name: "Pragathi Chengappa", role: "Impermanence as value variation" }
       ]
     },
     fill: true,
@@ -169,10 +166,10 @@ const PROJECTS = [
     team: {
       note: "Cap it Hot! was built by The Hawkins Guild, a team of four in Computer Game Design at UTS. Each of us designed and developed our own levels.",
       people: [
-        { name: "Sona Dheep Raja Balaji", role: "Tutorial and Level 1", me: true },
-        { name: "Yuhao Xu",               role: "Level 2" },
-        { name: "Harsha Varthini Maniraj", role: "Level 3" },
-        { name: "Lia Pereira Dullius",    role: "Level 4, visual assets and marketing" }
+        { name: "Sona Dheep Raja Balaji", role: "Tutorial, Level 1, Level 2 design and build", me: true },
+        { name: "Harsha Varthini Maniraj", role: "Level 3 design and build" },
+        { name: "Lia Pereira Dullius",    role: "Level 4, visual assets and marketing" },
+        { name: "Yuhao Xu",               role: "Level 2 first iteration build" }
       ]
     },
     fill: true,
@@ -232,11 +229,12 @@ const PROJECTS = [
     team: {
       note: "Qrew was a team of five across six Lean UX sprints in Interaction Design Studio.",
       people: [
-        { name: "Sona Dheep Raja Balaji", role: "Research lead", me: true },
-        { name: "[Teammate name]", role: "[Their part]" },
-        { name: "[Teammate name]", role: "[Their part]" },
-        { name: "[Teammate name]", role: "[Their part]" },
-        { name: "[Teammate name]", role: "[Their part]" }
+        { name: "Sona Dheep Raja Balaji", me: true },
+        { name: "Lia Pereira Dullius" },
+        { name: "Tanvi Karanth" },
+        { name: "Alfonso Dolina" },
+        { name: "Victoria Zheng" },
+        { name: "Swapnil Mangesh Tirpude" },
       ]
     },
     fill: true,
@@ -337,9 +335,12 @@ const PROJECTS = [
     team: {
       note: "WeConnect was a cohort team project in the Apple Foundation Program. We shared ideation and research; I owned the high-fidelity design.",
       people: [
-        { name: "Sona Dheep Raja Balaji", role: "High-fidelity design", me: true },
-        { name: "[Teammate name]", role: "[Their part]" },
-        { name: "[Teammate name]", role: "[Their part]" }
+        { name: "Sona Dheep Raja Balaji", role: "Researcher, Low, Mid & High-fidelity design", me: true },
+        { name: "Jie", role: "Researcher & Logo Designer" },
+        { name: "Diana", role: "Researcher & Hi-Fi design" },
+        { name: "Tom", role: "Researcher & Developer" },
+        { name: "Akash", role: "Researcher & Developer" },
+        { name: "Aisha", role: "Researcher" }
       ]
     },
     fill: true,
