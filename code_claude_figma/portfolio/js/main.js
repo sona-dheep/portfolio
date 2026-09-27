@@ -28,17 +28,39 @@
   }).join("");
 
   /* ── quotes ──────────────────────────────────────────── */
-  document.getElementById("quotes").innerHTML = QUOTES.map(function (q) {
-    return (
-      '<figure class="quote">' +
-        '<blockquote>' + q.quote + '</blockquote>' +
-        '<figcaption>' +
-          '<span class="avatar" aria-hidden="true">' + q.initials + '</span>' +
-          '<span class="who">' + q.name + '<span>' + q.role + '</span></span>' +
-        '</figcaption>' +
-      '</figure>'
-    );
-  }).join("");
+  /* The longest quote runs full width as a lead testimonial and the rest
+     sit beside each other, so one long quote can't stretch the row into a
+     tall column with two near-empty cards next to it. */
+  (function renderQuotes() {
+    var longest = 0;
+    QUOTES.forEach(function (q, i) {
+      if (q.quote.length > QUOTES[longest].quote.length) longest = i;
+    });
+
+    /* Render the longest first so it takes the top row on its own and the
+       remaining two pair up beneath it. Reordering here rather than with
+       CSS `order` keeps the DOM order and the visual order identical. */
+    var ordered = [QUOTES[longest]].concat(QUOTES.filter(function (q, i) {
+      return i !== longest;
+    }));
+
+    document.getElementById("quotes").innerHTML = ordered.map(function (q, i) {
+      /* a quote still in [brackets] is an unfilled placeholder */
+      var pending = /^\s*\[/.test(q.quote);
+      var cls = "quote"
+              + (i === 0 ? " lead" : "")
+              + (pending ? " pending" : "");
+      return (
+        '<figure class="' + cls + '">' +
+          '<blockquote>' + q.quote + '</blockquote>' +
+          '<figcaption>' +
+            '<span class="avatar" aria-hidden="true">' + q.initials + '</span>' +
+            '<span class="who">' + q.name + '<span>' + q.role + '</span></span>' +
+          '</figcaption>' +
+        '</figure>'
+      );
+    }).join("");
+  })();
 
   /* ── methods ─────────────────────────────────────────── */
   document.getElementById("methods").innerHTML = METHODS.map(function (m) {
@@ -335,11 +357,164 @@
     if (el) spy.observe(el);
   });
 
+  /* ── the headline types itself ───────────────────────── */
+  (function typewriter() {
+    var h1 = document.querySelector(".tw");
+    var replay = document.getElementById("twReplay");
+    if (!h1) return;
+
+    var lines = [].slice.call(h1.querySelectorAll(".tw-line"));
+
+    /* keep the real sentence available to assistive tech before we
+       shred it into per-character spans */
+    h1.setAttribute("aria-label", lines.map(function (l) {
+      return l.textContent.trim();
+    }).join(" "));
+
+    if (reduced) { h1.classList.add("armed"); return; }
+
+    /* split text nodes into character spans, leaving <em> intact */
+    function split(node) {
+      var out = [];
+      [].slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split("").forEach(function (ch) {
+            var sp = document.createElement("span");
+            sp.className = "c";
+            sp.textContent = ch;
+            frag.appendChild(sp);
+            out.push(sp);
+          });
+          node.replaceChild(frag, n);
+        } else if (n.nodeType === 1) {
+          out = out.concat(split(n));
+        }
+      });
+      return out;
+    }
+
+    var seq = lines.map(function (line) {
+      line.setAttribute("aria-hidden", "true");
+      return { line: line, chars: split(line) };
+    });
+
+    /* one caret for the whole headline, moved from line to line */
+    var caret = document.createElement("span");
+    caret.className = "tw-caret";
+    h1.classList.add("armed");
+
+    /* ── keystroke sound, synthesised so there's no file to load ── */
+    var actx = null;
+    function tick(low) {
+      if (!actx) return;
+      var len = low ? 2400 : 300;
+      var buf = actx.createBuffer(1, len, actx.sampleRate);
+      var d = buf.getChannelData(0);
+      for (var i = 0; i < len; i++) {
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, low ? 2.5 : 3.4);
+      }
+      var src = actx.createBufferSource(); src.buffer = buf;
+      var bp = actx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = low ? 300 : 1500 + Math.random() * 950;
+      bp.Q.value = low ? 0.8 : 1.3;
+      var g = actx.createGain();
+      g.gain.value = low ? 0.075 : 0.045 + Math.random() * 0.028;
+      src.connect(bp); bp.connect(g); g.connect(actx.destination);
+      src.start();
+    }
+
+    /* ── the run ── */
+    var timer = null;
+
+    /* sit the caret over the cap height rather than the whole line box */
+    function place(line, ch, atEnd) {
+      if (caret.parentNode !== line) line.appendChild(caret);
+      var h = ch.offsetHeight;
+      caret.style.height = Math.round(h * 0.68) + "px";
+      caret.style.top = Math.round(ch.offsetTop + h * 0.08) + "px";
+      caret.style.left = (atEnd ? ch.offsetLeft + ch.offsetWidth : ch.offsetLeft) + "px";
+      caret.classList.add("live");
+    }
+
+    function run(sound) {
+      clearTimeout(timer);
+      if (sound && !actx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) { try { actx = new AC(); } catch (e) { actx = null; } }
+      }
+      if (!sound) actx = null;
+
+      seq.forEach(function (l) {
+        l.chars.forEach(function (c) { c.classList.remove("on"); });
+      });
+      caret.classList.remove("live", "done");
+      if (replay) { replay.classList.remove("show"); replay.hidden = true; }
+
+      var li = 0, ci = 0;
+
+      function step() {
+        var cur = seq[li];
+        if (!cur) return finish();
+
+        if (ci >= cur.chars.length) {
+          li++; ci = 0;
+          if (!seq[li]) return finish();
+          if (actx) tick(true);                 /* carriage return */
+          place(seq[li].line, seq[li].chars[0], false);
+          timer = setTimeout(step, 260);
+          return;
+        }
+
+        var ch = cur.chars[ci];
+        ch.classList.add("on");
+        if (actx && ch.textContent.trim()) tick(false);
+        ci++;
+
+        var typed = ch.textContent;
+        var wait = 34;
+        if (typed === " ") wait = 48;
+        else if (typed === ",") wait = 180;
+        else if (typed === ".") wait = 240;
+        wait += (Math.random() * 28) - 14;
+
+        if (ci < cur.chars.length) place(cur.line, cur.chars[ci], false);
+        else place(cur.line, ch, true);
+
+        timer = setTimeout(step, wait);
+      }
+
+      function finish() {
+        caret.classList.add("done");
+        if (replay) {
+          replay.hidden = false;
+          requestAnimationFrame(function () { replay.classList.add("show"); });
+        }
+      }
+
+      step();
+    }
+
+    if (replay) {
+      replay.addEventListener("click", function () { run(true); });
+    }
+
+    /* the hero is above the fold — start once layout has settled, so the
+       caret measures real character positions */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { run(false); });
+    });
+  })();
+
   /* ── reveal on scroll ────────────────────────────────── */
-  var revealables = document.querySelectorAll(".reveal");
+  /* One observer drives everything: .reveal elements fade up, and
+     [data-anim] containers (the wall, the methods grid, the timeline)
+     get the same .in class, which their own CSS interprets. */
+  var animated = document.querySelectorAll(".reveal, [data-anim]");
 
   if (reduced) {
-    revealables.forEach(function (el) { el.classList.add("in"); });
+    animated.forEach(function (el) { el.classList.add("in"); });
   } else {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -348,12 +523,25 @@
           io.unobserve(entry.target);
         }
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+      /* A percentage bottom margin swallows short elements that sit in the
+         last slice of the viewport — the footer never fired with -8%. A
+         fixed inset is predictable regardless of screen height. */
+    }, { rootMargin: "0px 0px -40px 0px", threshold: 0.08 });
 
-    revealables.forEach(function (el) { io.observe(el); });
+    animated.forEach(function (el) { io.observe(el); });
 
+    /* Safety net: anything still hidden once the page is scrolled to the
+       bottom gets revealed, so nothing can be stranded off-screen. */
+    var bottomCheck = function () {
+      if (window.innerHeight + window.scrollY < document.body.scrollHeight - 4) return;
+      animated.forEach(function (el) { el.classList.add("in"); });
+      window.removeEventListener("scroll", bottomCheck);
+    };
+    window.addEventListener("scroll", bottomCheck, { passive: true });
+
+    /* the hero is above the fold — reveal it immediately */
     requestAnimationFrame(function () {
-      document.querySelectorAll(".hero .reveal").forEach(function (el) { el.classList.add("in"); });
+      document.querySelectorAll(".hero .reveal, .hero [data-anim]").forEach(function (el) { el.classList.add("in"); });
     });
   }
 })();

@@ -25,12 +25,8 @@ const TIMELINE = [
    Ask each person for two sentences: one on how you work,
    one on what changed because of your work. */
 const QUOTES = [
-  { quote: "[Two sentences from your Freshworks manager or a product owner — ideally about how you worked with product and design, not only about testing.]",
-    name: "[Name]", role: "[Role] · Freshworks", initials: "FW" },
-  { quote: "[Two sentences from a UTS teammate — Qrew, WeConnect or Cap it Hot. Best if it names something specific you did for the team.]",
-    name: "[Name]", role: "[Project] · UTS", initials: "UT" },
-  { quote: "[Two sentences from a tutor, the Apple Foundation Program, or a Bluebird Pantry coordinator.]",
-    name: "[Name]", role: "[Role]", initials: "AF" }
+  { quote: "Working with Sona on Cap it Hot, her instincts were consistently design-led. She shaped the level layouts with real attention to player experience and pacing, and in every meeting she pushed us to think harder about how a mechanic or a moment would actually feel to play, not just whether it worked. That critical eye made the game noticeably better over the weeks we built it. Unity and C# were completely new to her, but she picked them up quickly and applied them well, carrying that same energy through to the final pitch.",
+    name: "Harsha", role: "Cap It Hot · UTS", initials: "UTS" }
 ];
 
 /* Grouped to match how job ads name things — recruiters and ATS
@@ -47,7 +43,7 @@ const METHODS = [
   { name: "Accessibility",            note: "WCAG-aligned, inclusive design for 65+" },
   { name: "AI-assisted workflows",    note: "Generative tooling with documented provenance" },
   { name: "Cross-functional delivery", note: "Agile teams, product owners, engineers" },
-  { name: "Design-to-code",           note: "SwiftUI, Unity, p5.js — prototypes that run" },
+  { name: "Design-to-code",           note: "SwiftUI, Unity, p5.js - prototypes that run" },
   { name: "Stakeholder communication", note: "Design rationale for technical & non-technical audiences" }
 ];
 

@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<script>document.documentElement.className += " js";</script>
 
 <a class="skip" href="#work">Skip to work</a>
 
@@ -45,11 +46,19 @@
   <div class="shell">
     <p class="label label-rose reveal"><span class="dash"></span>UX Researcher · Interaction &amp; Product Designer · Sydney</p>
 
-    <h1 class="reveal d1">
-      I came to design<br>
-      from the <em>other side</em><br>
-      of the build.
+    <h1 class="tw" data-anim="type">
+      <span class="tw-line">I came to design</span>
+      <span class="tw-line">from the <em>other side</em></span>
+      <span class="tw-line">of the build.</span>
     </h1>
+
+    <button class="tw-replay" id="twReplay" type="button" hidden>
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+        <path d="M1.5 5.2h2.4L6.8 2.6v7.8L3.9 7.8H1.5V5.2Z" fill="currentColor"/>
+        <path d="M9 4.3a3 3 0 0 1 0 4.4M10.8 2.5a5.5 5.5 0 0 1 0 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      Replay with sound
+    </button>
 
     <p class="hero-sub reveal d2">
       Five years as a senior software engineer in test, working alongside product
@@ -83,10 +92,10 @@
   <span class="blob blob-rose" aria-hidden="true"></span>
 
   <div class="shell">
-    <p class="label label-sage"><span class="dash"></span>Background</p>
+    <p class="label label-sage reveal"><span class="dash"></span>Background</p>
 
     <div class="timeline-wrap">
-      <ol class="timeline" id="timeline"></ol>
+      <ol class="timeline" id="timeline" data-anim="draw"></ol>
     </div>
   </div>
 </section>
@@ -94,10 +103,10 @@
 <!-- ══════════ work ══════════ -->
 <section class="work" id="work">
   <div class="shell">
-    <p class="label label-rose"><span class="dash"></span>Selected work</p>
-    <h2 class="work-h">Six projects, and the strongest decision in each one was a removal.</h2>
-    <p class="wall-hint">Pick one off the wall</p>
-    <div class="wall" id="wall"></div>
+    <p class="label label-rose reveal"><span class="dash"></span>Selected work</p>
+    <h2 class="work-h reveal">Six projects, and the strongest decision in each one was a removal.</h2>
+    <p class="wall-hint reveal">Pick one off the wall</p>
+    <div class="wall" id="wall" data-anim="stagger"></div>
   </div>
 </section>
 
@@ -109,29 +118,29 @@
 <!-- ══════════ process ══════════ -->
 <section class="process" id="process">
   <div class="shell">
-    <p class="label label-forest"><span class="dash"></span>Process &amp; people</p>
-    <h2 class="process-h">How I work, and what it's like to work with me.</h2>
+    <p class="label label-forest reveal"><span class="dash"></span>Process &amp; people</p>
+    <h2 class="process-h reveal">How I work, and what it's like to work with me.</h2>
 
     <!--
       ⚠ PLACEHOLDER QUOTES — replace all three before publishing.
       Ask each person for two sentences: one on how you work, one on what
       changed because of your work. Do not publish with brackets in place.
     -->
-    <div class="quotes" id="quotes"></div>
+    <div class="quotes reveal" id="quotes"></div>
 
-    <p class="label label-forest mt"><span class="dash"></span>Skills, methods &amp; tools</p>
-    <div class="methods" id="methods"></div>
+    <p class="label label-forest mt reveal"><span class="dash"></span>Skills, methods &amp; tools</p>
+    <div class="methods" id="methods" data-anim="stagger"></div>
   </div>
 </section>
 
 <!-- ══════════ contact ══════════ -->
 <section class="contact" id="contact">
   <div class="shell narrow">
-    <p class="label label-rose center"><span class="dash"></span>Get in touch</p>
-    <h2 class="contact-h">Happy to talk process, product, or code.</h2>
-    <p class="contact-p">I'm Sydney-based and open to UX Designer, UX Researcher, Interaction Designer and Product Designer roles. Email is the fastest way to reach me.</p>
+    <p class="label label-rose center reveal"><span class="dash"></span>Get in touch</p>
+    <h2 class="contact-h reveal">Happy to talk process, product, or code.</h2>
+    <p class="contact-p reveal">I'm Sydney-based and open to UX Designer, UX Researcher, Interaction Designer and Product Designer roles. Email is the fastest way to reach me.</p>
 
-    <div class="contact-cta">
+    <div class="contact-cta reveal">
       <a class="btn btn-solid" href="mailto:sonadheep@gmail.com">sonadheep@gmail.com</a>
       <a class="btn btn-ghost" href="https://www.linkedin.com/in/sona-dheep-raja-balaji-335263168" target="_blank" rel="noopener">LinkedIn</a>
       <a class="btn btn-ghost" href="https://github.com/sonadheeprajabalaji-lang" target="_blank" rel="noopener">GitHub</a>
@@ -142,12 +151,11 @@
 </section>
 
 <footer class="footer">
-  <div class="shell foot-in">
+  <div class="shell foot-in reveal">
     <span>© <span id="year"></span> Sona Dheep Raja Balaji · Sydney</span>
     <span class="foot-links">
       <a href="https://www.linkedin.com/in/sona-dheep-raja-balaji-335263168" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/sonadheeprajabalaji-lang" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://yuhao-x.itch.io/cap-it-hot" target="_blank" rel="noopener">itch.io</a>
+      <a href="https://github.com/sona-dheep" target="_blank" rel="noopener">GitHub</a>
     </span>
   </div>
 </footer>
