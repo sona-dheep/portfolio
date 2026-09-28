@@ -70,8 +70,19 @@
   /* ── the wall ────────────────────────────────────────── */
   var plain = function (str) { return str.replace(/&amp;/g, "and"); };
 
-  /* a project may carry several images; `img` alone still works */
-  function slidesOf(p) { return (p.images && p.images.length) ? p.images : [p.img]; }
+  /* a project may carry several images; `img` alone still works. One that
+     hasn't been shot yet carries none, and gets a typographic panel below
+     rather than a broken frame. */
+  function slidesOf(p) {
+    if (p.images && p.images.length) return p.images;
+    return p.img ? [p.img] : [];
+  }
+
+  /* no photography yet — set the title in the display face instead, so an
+     unfinished project still reads as a designed tile on the wall */
+  function blankArt(p) {
+    return '<span class="blank-mark">' + (p.mark || p.title) + '</span>';
+  }
 
   document.getElementById("wall").innerHTML = PROJECTS.map(function (p, i) {
     var imgs = slidesOf(p);
@@ -92,7 +103,11 @@
     return (
       '<button class="tile" data-i="' + i + '" aria-haspopup="dialog"' +
               ' aria-label="Open ' + plain(p.title) + '">' +
-        '<span class="tile-img" style="background:' + p.coverBg + '">' + slides + dots + '</span>' +
+        '<span class="tile-img' + (imgs.length ? '' : ' blank') + '"' +
+              ' style="background:' + p.coverBg + '">' +
+          (imgs.length ? slides + dots : blankArt(p)) +
+          (p.status ? '<span class="tile-status">' + p.status + '</span>' : '') +
+        '</span>' +
         '<span class="tile-body">' +
           '<span class="name">' + p.title + '</span>' +
           '<span class="meta">' + p.pills.slice(0, 2).join(" · ") + '</span>' +
@@ -196,8 +211,9 @@
     }).join("");
 
     /* links moved up under the title — first one gets the solid treatment */
-    var cta = p.links.length
-      ? '<div class="sheet-cta">' + p.links.map(function (l, n) {
+    var links = p.links || [];
+    var cta = links.length
+      ? '<div class="sheet-cta">' + links.map(function (l, n) {
           return '<a class="' + (n === 0 ? "key" : "alt") + '" href="' + l.href +
                  '" target="_blank" rel="noopener">' + l.label + '</a>';
         }).join("") + '</div>'
@@ -223,10 +239,16 @@
 
     sheet.innerHTML =
       '<button class="close" id="closeBtn" aria-label="Close project">&times;</button>' +
-      '<div class="sheet-img" style="background:' + p.coverBg + '">' + slides + gallery + '</div>' +
+      '<div class="sheet-img' + (imgs.length ? '' : ' blank') + '"' +
+           ' style="background:' + p.coverBg + '">' +
+        (imgs.length ? slides + gallery : blankArt(p)) +
+      '</div>' +
       '<div class="sheet-head">' +
         '<div class="sheet-head-text">' +
-          '<div class="pills">' + p.pills.map(function (t) { return "<span>" + t + "</span>"; }).join("") + '</div>' +
+          '<div class="pills">' +
+            (p.status ? '<span class="status">' + p.status + '</span>' : '') +
+            p.pills.map(function (t) { return "<span>" + t + "</span>"; }).join("") +
+          '</div>' +
           '<h2 id="sheetTitle">' + p.title + '</h2>' +
           '<p class="sub">' + p.subtitle + '</p>' +
         '</div>' +
@@ -544,4 +566,136 @@
       document.querySelectorAll(".hero .reveal, .hero [data-anim]").forEach(function (el) { el.classList.add("in"); });
     });
   }
+  /* ── testing-to-design cursor ─────────────────────────────
+     Over the hero, a small pin follows the pointer and files a
+     test-report note about whatever is under it. Over "other side"
+     the words drop to wireframe outlines, then resolve into the
+     finished type. Fine pointers only; skipped for reduced motion. */
+  var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  (function probe() {
+    var hero = document.querySelector(".hero");
+    if (!hero || reduced || !fine) return;
+
+    var el = document.createElement("div");
+    el.className = "probe";
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML = '<span class="probe-pin"></span><span class="probe-tag"></span>';
+    document.body.appendChild(el);
+    var tag = el.querySelector(".probe-tag");
+
+    var x = 0, y = 0, px = 0, py = 0, raf = 0, key = "", curEm = null, timer = 0;
+
+    function set(status, text, cls) {
+      if (key === status + text) return;
+      key = status + text;
+      tag.textContent = "";
+      var b = document.createElement("b");
+      b.textContent = status + ":";
+      if (cls) b.className = cls;
+      tag.appendChild(b);
+      tag.appendChild(document.createTextNode(text));
+    }
+
+    function read(t) {
+      if (t.closest(".tw"))        return ["expected", "clarity"];
+      if (t.closest(".hero .label")) return ["expected", "a role and a place"];
+      if (t.closest(".hero-sub"))  return ["expected", "plain language"];
+      if (t.closest(".hero-cta"))  return ["expected", "one clear next step"];
+      var s = t.closest(".stat");
+      if (s) return ["assert", s.children[0].textContent + " " + s.children[1].textContent];
+      return null;
+    }
+
+    function leaveEm() {
+      clearTimeout(timer);
+      if (curEm) curEm.classList.remove("wf");
+      curEm = null;
+    }
+    function enterEm(m) {
+      leaveEm();
+      curEm = m;
+      m.classList.add("wf");
+      set("actual", "wireframe");
+      timer = setTimeout(function () {
+        m.classList.remove("wf");
+        set("pass", "designed", "pass");
+      }, 650);
+    }
+
+    function show() {
+      if (!el.classList.contains("on")) { px = x; py = y; }
+      el.classList.add("on");
+    }
+    function hide() { el.classList.remove("on"); }
+
+    function frame() {
+      raf = 0;
+      px += (x - px) * 0.22;
+      py += (y - py) * 0.22;
+      var w = el.offsetWidth, flip = x + w + 40 > window.innerWidth;
+      el.classList.toggle("flip", flip);
+      el.style.transform = "translate3d(" + Math.round(flip ? px - 16 - w : px + 16) + "px," +
+                           Math.round(py + 18) + "px,0)";
+      if (Math.abs(x - px) > 0.5 || Math.abs(y - py) > 0.5) raf = requestAnimationFrame(frame);
+    }
+
+    hero.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
+      x = e.clientX; y = e.clientY;
+      var t = e.target, m = t.closest && t.closest(".tw em");
+      /* the wireframe swap waits until the headline has finished typing */
+      if (m && !document.querySelector(".tw .c:not(.on)")) {
+        if (m !== curEm) enterEm(m);
+        show();
+      } else {
+        if (curEm) leaveEm();
+        var r = t.closest ? read(t) : null;
+        if (r) { set(r[0], r[1]); show(); } else hide();
+      }
+      if (!raf) raf = requestAnimationFrame(frame);
+    });
+    hero.addEventListener("pointerleave", function () { leaveEm(); hide(); });
+  })();
+
+  /* ── magnetic buttons ─────────────────────────────────────
+     Buttons drift a few pixels toward the pointer when it is near,
+     and settle back when it leaves. Uses the `translate` property so
+     it stacks with the existing hover lift instead of fighting it. */
+  (function magnets() {
+    if (reduced || !fine) return;
+    var SEL = ".btn, .nav-cta, .sheet-cta a";
+    var PAD = 56, PULL = 0.28, MAX = 9;
+    var mx = 0, my = 0, raf = 0;
+
+    function clamp(v) { return Math.max(-MAX, Math.min(MAX, v)); }
+
+    function tick() {
+      raf = 0;
+      var modal = scrim.classList.contains("open");
+      document.querySelectorAll(SEL).forEach(function (b) {
+        b.classList.add("magnet");
+        var ox = b._mx || 0, oy = b._my || 0;
+        var r = b.getBoundingClientRect();
+        var cx = r.left + r.width / 2 - ox, cy = r.top + r.height / 2 - oy;
+        var inside = Math.abs(mx - cx) < r.width / 2 + PAD && Math.abs(my - cy) < r.height / 2 + PAD;
+        if (modal && !sheet.contains(b)) inside = false;
+        var nx = inside ? clamp((mx - cx) * PULL) : 0;
+        var ny = inside ? clamp((my - cy) * PULL) : 0;
+        if (nx === ox && ny === oy) return;
+        b._mx = nx; b._my = ny;
+        b.style.translate = inside ? nx + "px " + ny + "px" : "";
+      });
+    }
+
+    document.addEventListener("pointermove", function (e) {
+      if (e.pointerType === "touch") return;
+      mx = e.clientX; my = e.clientY;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    document.documentElement.addEventListener("mouseleave", function () {
+      mx = my = -9999;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+  })();
 })();

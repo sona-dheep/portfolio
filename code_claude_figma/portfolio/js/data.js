@@ -14,11 +14,14 @@ const TIMELINE = [
   { period: "2025 \u2013 present", role: "Master of Interaction Design", place: "University of Technology Sydney",
     note: "Field interviews, probes, usability testing and I build the prototypes.", now: true },
 
-  { period: "2025 \u2013 present", role: "Support Worker", place: "Mable, Sydney",
-    note: "Keeps me close to the people products forget.", now: true },
+  { period: "2025 \u2013 2026", role: "Support Worker", place: "Mable, Sydney",
+    note: "Kept me close to the people products forget." },
 
   { period: "2026", role: "Volunteer", place: "Bluebird Pantry, UTS",
-    note: "Volunteering and stock management, on campus." }
+    note: "Volunteering and stock management, on campus." },
+
+  { period: "2026 \u2013 present", role: "Customer Service", place: "Anita Gelato, Sydney",
+    note: "Front of house, at pace.", now: true }
 ];
 
 /* ⚠ REPLACE ALL THREE BEFORE PUBLISHING.
@@ -111,7 +114,7 @@ const PROJECTS = [
     fill: true,
     coverBg: "#F0C8CC",
     links: [
-      { label: "GitHub \u2197", href: "https://github.com/sonadheeprajabalaji-lang/ios-journal-app" },
+      { label: "GitHub \u2197", href: "https://github.com/sona-dheep/journal-app-ios" },
       { label: "Demo \u2197",   href: "https://youtube.com/shorts/SnjPG4hAcUo" }
     ],
     tabs: [

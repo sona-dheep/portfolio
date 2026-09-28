@@ -567,6 +567,53 @@ a{ color: inherit; }
 .tw-replay:hover{ border-color: var(--forest); color: var(--forest); transform: translateY(-1px); }
 .tw-replay svg{ flex: none; }
 
+/* ─── a project still in progress ─────────────────────────
+   Nothing has been shot yet, so the tile sets its own title in
+   the display face. Treating the empty frame as a designed panel
+   rather than a gap keeps the wall even, and the badge is what
+   tells a recruiter this one is live rather than unfinished. */
+.tile-img.blank, .sheet-img.blank{
+  display: grid; place-items: center; padding: 1.4rem;
+}
+/* the tile keeps 16:9 so the grid stays even, but a full-width 16:9 of
+   nothing but a word is a lot of empty hero — change the ratio rather
+   than clamping the height (see the note on .sheet-img) */
+.sheet-img.blank{ aspect-ratio: 5 / 2; }
+
+.blank-mark{
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(1.35rem, 3.2vw, 2rem); line-height: 1.08;
+  letter-spacing: -.015em; text-align: center; color: var(--forest);
+}
+.sheet-img.blank .blank-mark{ font-size: clamp(2.1rem, 6vw, 3.6rem); }
+
+.tile-status{
+  position: absolute; top: .72rem; left: .72rem; z-index: 2;
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .28rem .6rem .28rem .5rem;
+  background: rgba(255, 253, 248, .94); border-radius: 100px;
+  font-family: var(--body); font-size: .6rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--forest);
+  box-shadow: 0 2px 8px -4px rgba(28, 43, 30, .5);
+}
+/* a live dot earns the "in progress" claim — it says the work is
+   moving, not that the page was left half-built */
+.tile-status::before{
+  content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rose-ink); animation: livePulse 2.1s ease-in-out infinite;
+}
+@keyframes livePulse{ 50%{ opacity: .28 } }
+
+/* same status, restated inside the open project */
+.pills .status{
+  background: var(--forest); color: var(--cream);
+  display: inline-flex; align-items: center; gap: .4rem;
+}
+.pills .status::before{
+  content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rose-pale); animation: livePulse 2.1s ease-in-out infinite;
+}
+
 /* ─── the label dash draws itself ────────────────────────── */
 .js .label .dash{
   transform: scaleX(0); transform-origin: left center;
@@ -662,6 +709,7 @@ a{ color: inherit; }
   .js .tw.armed .c{ opacity: 1; }
   .tw-caret{ display: none; }
   .tw-replay{ display: none; }
+  .tile-status::before, .pills .status::before{ animation: none; }
   .js [data-anim="stagger"] > *,
   .js [data-anim="stagger"].in > *{ opacity: 1; animation: none; }
   .js .timeline::before,
@@ -676,4 +724,46 @@ a{ color: inherit; }
   .sheet{ animation: none; }
   .sheet-img img{ transition: none; }
   .sheet-dots button{ transition: none; }
+}
+
+/* ─── testing-to-design cursor ───────────────────────────── */
+.probe{
+  position: fixed; left: 0; top: 0; z-index: 40; pointer-events: none;
+  display: flex; align-items: center; gap: .5rem;
+  opacity: 0; transition: opacity .15s ease; will-change: transform;
+}
+.probe.on{ opacity: 1; }
+.probe.flip{ flex-direction: row-reverse; }
+.probe-pin{
+  flex: none; width: 12px; height: 12px; border-radius: 50%;
+  border: 1.5px solid var(--rose-ink); background: rgba(201,123,132,.28);
+}
+.probe-tag{
+  padding: .3rem .65rem; border-radius: 6px; white-space: nowrap;
+  background: var(--forest); color: var(--cream);
+  font-size: .74rem; font-weight: 500;
+  box-shadow: 0 8px 18px -10px rgba(10,18,11,.7);
+}
+.probe-tag b{ margin-right: .35rem; font-weight: 700; color: var(--rose-pale); }
+.probe-tag b.pass{ color: var(--sage-ink); }
+
+/* "other side": outlined glyphs in a dashed box, then the finished type */
+.hero h1 em{
+  -webkit-text-stroke: 1px transparent;
+  outline: 1.5px dashed transparent; outline-offset: .05em;
+  transition: color .5s ease, -webkit-text-stroke-color .5s ease, outline-color .5s ease;
+}
+.hero h1 em.wf{
+  color: transparent; -webkit-text-stroke-color: var(--forest-mid); outline-color: var(--rose);
+  transition-duration: .12s;
+}
+
+/* ─── magnetic buttons ───────────────────────────────────── */
+.btn.magnet, .nav-links a.magnet, .sheet-cta a.magnet{
+  transition: background-color .2s, border-color .2s, transform .2s, color .2s, opacity .2s,
+              translate .32s cubic-bezier(.25,.8,.35,1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .probe{ display: none; }
 }
